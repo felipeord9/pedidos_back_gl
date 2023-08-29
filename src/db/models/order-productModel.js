@@ -11,7 +11,7 @@ const OrderProductSchema = {
     autoIncrement: true
   },
   amount: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     allowNull: false
   },
   price: {

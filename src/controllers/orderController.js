@@ -34,7 +34,7 @@ const createOrder = async (req, res, next) => {
       deliveryDate: body.deliveryDate,
       observations: body.observations,
       purchaseOrder: body.purchaseOrder,
-      clientId: parseInt(body.client.id),
+      clientId: parseInt(body.client.nit),
       sellerId: body.seller.id,
       branchId: body.branch.id,
       createdAt: body.createdAt,
@@ -43,8 +43,8 @@ const createOrder = async (req, res, next) => {
     
     for(let product of body.products.agregados) {
       await OrderService.addItem({
-        amount: parseInt(product.amount),
-        price: parseInt(product.price.split('.').join('')),
+        amount: Number(product.amount),
+        price: Number(product.price.split('.').join('')),
         orderId: data.id,
         productId: product.id
       })
