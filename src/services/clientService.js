@@ -1,36 +1,41 @@
-const { models } = require('../libs/sequelize')
+const { models } = require("../libs/sequelize");
 
 const find = () => {
   const clients = models.Client.findAll({
-    include: [{
-      association: "branches",
-      include: ['seller']
-    }]
-  })
-  return clients
-}
+    include: [
+      {
+        association: "sucursales",
+        attributes: [["id", "idUn"], ["branch", "id"], "descripcion"],
+        include: ["vendedor"],
+      },
+    ],
+  });
+  return clients;
+};
 
 const findOne = (id) => {
   const client = models.Client.findByPk(id, {
-    include: [{
-      association: "branches",
-      include: ['seller']
-    }]
-  })
+    include: [
+      {
+        association: "branches",
+        include: ["seller"],
+      },
+    ],
+  });
 
-  if(!client) throw Error('No se encontro el cliente')
+  if (!client) throw Error("No se encontro el cliente");
 
-  return client
-}
+  return client;
+};
 
 const create = (body) => {
-  const client = models.Client.create(body)
+  const client = models.Client.create(body);
 
-  return client
-}
+  return client;
+};
 
 module.exports = {
   find,
   findOne,
-  create
-}
+  create,
+};

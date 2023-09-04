@@ -3,21 +3,23 @@ const { Model, DataTypes, Sequelize } = require("sequelize");
 const CLIENT_TABLE = "clients";
 
 const ClientSchema = {
-  id: {
+  nit: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     allowNull: false,
+    field: 'id'
   },
-  description: {
+  razonSocial: {
     type: DataTypes.STRING,
     allowNull: false,
+    field: 'description'
   },
 };
 
 class Client extends Model {
   static associate(models) {
     this.hasMany(models.Branch, {
-      as: 'branches',
+      as: 'sucursales',
       foreignKey: 'clientId'
     })
   }

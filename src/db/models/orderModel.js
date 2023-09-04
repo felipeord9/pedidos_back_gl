@@ -29,10 +29,10 @@ const OrderSchema = {
     type: DataTypes.BIGINT,
     allowNull: false,
     field: "client_id",
-    references: {
+    /* references: {
       model: CLIENT_TABLE,
       key: "id",
-    },
+    }, */
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
@@ -40,10 +40,10 @@ const OrderSchema = {
     type: DataTypes.INTEGER,
     allowNull: false,
     field: "seller_id",
-    references: {
+    /* references: {
       model: SELLER_TABLE,
       key: "id",
-    },
+    }, */
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
@@ -51,10 +51,10 @@ const OrderSchema = {
     type: DataTypes.INTEGER,
     allowNull: false,
     field: "branch_id",
-    references: {
+    /* references: {
       model: BRANCH_TABLE,
       key: "id",
-    },
+    }, */
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
@@ -71,9 +71,9 @@ const OrderSchema = {
 
 class Order extends Model {
   static associate(models) {
-    this.belongsTo(models.Client, { as: "client" });
+    //this.belongsTo(models.Client, { as: "client" });
     this.belongsTo(models.Seller, { as: "seller" });
-    this.belongsTo(models.Branch, { as: "branch" });
+    //this.belongsTo(models.Branch, { as: "branch" });
     this.belongsToMany(models.Product, {
       as: "items",
       through: models.OrderProduct,

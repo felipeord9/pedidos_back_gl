@@ -37,7 +37,9 @@ const addItem = (body) => {
 }
 
 const create = async (body) => {
-  const newOrder = models.Order.create(body)
+  const newOrder = models.Order.create(body, {
+    returning: ['id']
+  })
   return newOrder
 }
 
