@@ -8,5 +8,6 @@ router
   .get('/:id', OrderController.findOneOrder)
   .post('/', OrderController.createOrder)
   .post('/add-item', OrderController.addItemOrder)
+  .delete('/:id', OrderController.deleteOrder)
 
 module.exports = router

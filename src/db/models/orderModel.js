@@ -11,6 +11,11 @@ const OrderSchema = {
     primaryKey: true,
     autoIncrement: true,
   },
+  rowId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'row_id'
+  },
   deliveryDate: {
     type: DataTypes.DATEONLY,
     allowNull: false,
@@ -25,6 +30,16 @@ const OrderSchema = {
     allowNull: true,
     field: 'purchase_order'
   },
+  coId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'co_id'
+  },
+  coDescription: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'co_description'
+  },
   clientId: {
     type: DataTypes.BIGINT,
     allowNull: false,
@@ -35,6 +50,11 @@ const OrderSchema = {
     }, */
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
+  },
+  clientDescription: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'client_description'
   },
   sellerId: {
     type: DataTypes.INTEGER,
@@ -47,6 +67,11 @@ const OrderSchema = {
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
+  sellerDescription: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'seller_description'
+  },
   branchId: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -57,6 +82,11 @@ const OrderSchema = {
     }, */
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
+  },
+  branchDescription: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: "branch_description"
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -72,7 +102,7 @@ const OrderSchema = {
 class Order extends Model {
   static associate(models) {
     //this.belongsTo(models.Client, { as: "client" });
-    this.belongsTo(models.Seller, { as: "seller" });
+    //this.belongsTo(models.Seller, { as: "seller" });
     //this.belongsTo(models.Branch, { as: "branch" });
     this.belongsToMany(models.Product, {
       as: "items",

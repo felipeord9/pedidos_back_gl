@@ -33,19 +33,19 @@ const OrderProductSchema = {
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'product_id',
-    references: {
+    /* references: {
       model: PRODUCT_TABLE,
       key: 'id'
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL'
+    onDelete: 'SET NULL' */
   }
 }
 
 class OrderProduct extends Model {
   static associate(models) {
     this.belongsTo(models.Order, { as: 'order'})
-    this.belongsTo(models.Product, { as: 'product'})
+    //this.belongsTo(models.Product, { as: 'product'})
   }
   static config(sequelize) {
     return {

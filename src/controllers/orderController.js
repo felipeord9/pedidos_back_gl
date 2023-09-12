@@ -30,13 +30,19 @@ const findOneOrder = async (req, res, next) => {
 const createOrder = async (req, res, next) => {
   try {
     const { body } = req
+    console.log(body)
     const data = await OrderService.create({
       deliveryDate: body.deliveryDate,
       observations: body.observations,
       purchaseOrder: body.purchaseOrder,
       clientId: parseInt(body.client.nit),
+      clientDescription: body.client.razonSocial,
       sellerId: body.seller.id,
+      sellerDescription: body.seller.tercero ? body.seller.tercero.razonSocial : body.seller.description,
       branchId: body.branch.id,
+      branchDescription: body.branch.descripcion,
+      coId: body.agency.id,
+      coDescription: body.agency.descripcion,
       createdAt: body.createdAt,
       total: parseInt(body.products.total.split('.').join(''))
     })
@@ -74,9 +80,24 @@ const addItemOrder = async (req, res, next) => {
   }
 }
 
+const deleteOrder = async (req, res, next) => {
+  try {
+    const { params: { id } } = req
+    const data = await OrderService.remove(id)
+
+    res.status(202).json({
+      message: 'Deleted',
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   findAllOrders,
   findOneOrder,
   createOrder,
-  addItemOrder
+  addItemOrder,
+  deleteOrder
 }
