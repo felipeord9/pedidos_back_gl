@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { models } = require("../libs/sequelize");
 
 const find = () => {
@@ -16,6 +17,29 @@ const finOne = (id) => {
   if(!order) throw Error('No se encontró la orden')
 
   return order
+}
+
+const findFilteredByDate = (initialDate, finalDate) => {
+  console.log(finalDate)
+  const orders = models.Order.findAll({
+    where: {
+      [Op.and]: [
+        {
+          createdAt: { [Op.gte] : initialDate}
+        },
+        {
+          createdAt : { [Op.lte]: finalDate}
+        }
+      ]
+    },
+    include: [
+      "items"
+    ],
+  });
+
+  if(!orders) throw Error('No hay pedidos en ese rango de fechas')
+
+  return orders
 }
 
 const addItem = (body) => {
@@ -42,6 +66,7 @@ const remove = async (id) => {
 module.exports = {
   find,
   finOne,
+  findFilteredByDate,
   create,
   addItem,
   remove

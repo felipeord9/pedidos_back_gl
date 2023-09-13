@@ -2,7 +2,15 @@ const OrderService = require('../services/orderService')
 
 const findAllOrders = async (req, res, next) => {
   try {
-    const data = await OrderService.find()
+    let data
+    if(req.query.hasOwnProperty('init')) {
+      const { init, final } = req.query
+      const newFinal = new Date(final)
+      newFinal.setDate(newFinal.getDate() + 1)
+      data = await OrderService.findFilteredByDate(init, newFinal)
+    } else {
+      data = await OrderService.find()
+    }
 
     res.status(200).json({
       message: 'OK',
@@ -24,6 +32,20 @@ const findOneOrder = async (req, res, next) => {
     })
   } catch (error) {
     next(error)
+  }
+}
+
+const findFilteredOrdersByDate = async (req, res, next) => {
+  try {
+    const { query: { init, final }} = req
+    const data = await OrderService.findFilteredByDate(init, final)
+
+    res.status(200).json({
+      message: 'OK',
+      data
+    })
+  } catch (error) {
+    
   }
 }
 
@@ -97,6 +119,7 @@ const deleteOrder = async (req, res, next) => {
 module.exports = {
   findAllOrders,
   findOneOrder,
+  findFilteredOrdersByDate,
   createOrder,
   addItemOrder,
   deleteOrder

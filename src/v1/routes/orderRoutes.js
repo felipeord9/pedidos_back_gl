@@ -4,6 +4,7 @@ const OrderController = require('../../controllers/orderController')
 const router = express.Router()
 
 router
+  .get('/?init&final', OrderController.findFilteredOrdersByDate)
   .get('/', OrderController.findAllOrders)
   .get('/:id', OrderController.findOneOrder)
   .post('/', OrderController.createOrder)
