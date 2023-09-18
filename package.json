@@ -14,12 +14,18 @@
   "author": "Jhonatan Castrillón <jhonatancastrillon34@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "bcrypt": "^5.1.1",
     "cors": "2.8.5",
     "dotenv": "16.1.4",
     "express": "4.18.2",
     "html-pdf": "3.0.1",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "6.9.3",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "pg": "8.11.0",
     "sequelize": "6.32.0",
     "sequelize-cli": "6.6.1"
