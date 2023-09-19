@@ -1,15 +1,13 @@
 const boom = require('@hapi/boom')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
 
+const AuthService = require('./mailService')
 const UserService = require('./userService')
 const { config } = require('../config/config')
 
 const getUser = async (email, password) => {
   const user = await UserService.findByEmail(email)
-
-  if (!user) throw boom.unauthorized()
 
   const isMatch = await bcrypt.compare(password, user.password)
 
@@ -30,6 +28,20 @@ const signToken = (user) => {
   }
 }
 
+const changePassword = async (id, currentPassword, newPassword) => {
+  const user = await UserService.findOne(id)
+
+  const isMatch = bcrypt.compareSync(currentPassword, user.password)
+
+  if(!isMatch) throw boom.unauthorized()
+
+  const hash = bcrypt.hashSync(newPassword, 10)
+
+  const updatedUser = await user.update({ password: hash })
+  delete updatedUser.dataValues.password
+  return updatedUser
+}
+
 const sendRecovery = async (email) => {
   const user = await UserService.findByEmail(email)
 
@@ -43,16 +55,17 @@ const sendRecovery = async (email) => {
     from: config.smtpEmail,
     to: user.email,
     subject: 'Email para recuperar contraseña',
-    html: `<b>Ingresa aquí</b>`
+    html: `<b>Ingresa aquí http://localhost:3000/recuperacion/contrasena/${token}</b>`
   }
 
-  const rta = await sendMail(mail)
+  const rta = await AuthService.sendEmails(mail)
   await UserService.update(user.id, { recoveryToken: token })
   return rta
 }
 
-const changePassword = async (token, newPassword) => {
+const changeRecoveryPassword = async (token, newPassword) => {
   try {
+    console.log(token)
     const payload = jwt.verify(token, config.jwtSecret)
     const user = await UserService.findOne(payload.sub)
 
@@ -70,7 +83,7 @@ const changePassword = async (token, newPassword) => {
   }
 }
 
-const sendMail = async (infoMail) => {
+/* const sendMail = async (infoMail) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -82,12 +95,13 @@ const sendMail = async (infoMail) => {
   })
   await transporter.sendMail(infoMail)
   return { message: 'Mail sent' }
-}
+} */
 
 module.exports = {
   getUser,
   signToken,
-  sendRecovery,
   changePassword,
-  sendMail
+  sendRecovery,
+  changeRecoveryPassword,
+  //sendMail
 }

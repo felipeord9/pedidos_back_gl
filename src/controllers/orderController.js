@@ -3,7 +3,7 @@ const OrderService = require('../services/orderService')
 const findAllOrders = async (req, res, next) => {
   try {
     let data
-    if(req.query.hasOwnProperty('init')) {
+    if(Object.keys(req.query).length > 0) {
       const { init, final } = req.query
       const newFinal = new Date(final)
       newFinal.setDate(newFinal.getDate() + 1)
@@ -11,6 +11,34 @@ const findAllOrders = async (req, res, next) => {
     } else {
       data = await OrderService.find()
     }
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const findAllOrdersBySeller = async (req, res, next) => {
+  try {
+    const { sellerId } = req.params
+    const data = await OrderService.findBySeller(sellerId)
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const findAllOrdersByCO = async (req, res, next) => {
+  try {
+    const { coId } = req.params
+    const data = await OrderService.findByCO(coId)
 
     res.status(200).json({
       message: 'OK',
@@ -118,6 +146,8 @@ const deleteOrder = async (req, res, next) => {
 
 module.exports = {
   findAllOrders,
+  findAllOrdersBySeller,
+  findAllOrdersByCO,
   findOneOrder,
   findFilteredOrdersByDate,
   createOrder,

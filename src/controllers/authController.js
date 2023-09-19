@@ -2,7 +2,7 @@ const AuthService = require('../services/authService')
 
 const login = async (req, res, next) => {
   try {
-    const user = req.user
+    const { user } = req
     delete user.dataValues.recoveryToken
     res.status(200).json(AuthService.signToken(user))
   } catch (error) {
@@ -10,7 +10,18 @@ const login = async (req, res, next) => {
   }
 }
 
-const recoveryPassword = async (req, res, next) => {
+const changePassword = async (req, res, next) => {
+  try {
+    const {user, body} = req
+    const data = await AuthService.changePassword(user.sub, body.currentPassword, body.newPassword)
+
+    res.status(200).json(data)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const sendRecovery = async (req, res, next) => {
   try {
     const { email } = req.body
     const data = await AuthService.sendRecovery(email)
@@ -20,18 +31,19 @@ const recoveryPassword = async (req, res, next) => {
   }
 }
 
-const changePassword = async (req, res, next) => {
+const changeRecoveryPassword = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body
-    const data = await AuthService.changePassword(token, newPassword)
+    const data = await AuthService.changeRecoveryPassword(token, newPassword)
     res.status(200).json(data)
   } catch (error) {
-
+    next(error)
   }
 }
 
 module.exports = {
   login,
-  recoveryPassword,
-  changePassword
+  changePassword,
+  sendRecovery,
+  changeRecoveryPassword
 }

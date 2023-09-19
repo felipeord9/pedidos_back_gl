@@ -1,4 +1,5 @@
 const express = require('express')
+const UserRoutes = require('./userRoutes')
 const MailRoutes = require('./mailRoutes')
 const ProductRoutes = require('./productRoutes')
 const AgencyRoutes = require('./agencyRoutes')
@@ -12,7 +13,8 @@ function routerApi(app) {
 
     app.use('/api/v1/', router)
 
-    router.use('auth', AuthRoutes)
+    router.use('/auth', AuthRoutes)
+    router.use('/users', UserRoutes)
     router.use('/mail', MailRoutes)
     router.use('/products', ProductRoutes)
     router.use('/agencies', AgencyRoutes)

@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require('morgan')
+const bodyParser = require('body-parser')
 const routerApi = require("./v1/routes");
 const { errorHandler, boomErrorHandler, ormErrorHandler } = require('./middlewares/errorHandler')
 const { config } = require("./config/config");
@@ -12,11 +14,12 @@ const app = express();
 /* let corsOptions = {
   origin: 'https://pedidos.granlangostino.net:5515',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-} */
+}  */
 
 // Configuraciones de la aplicación
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(cors())
+app.use(morgan("dev"))
 //app.use(cors(corsOptions));
 
 // Configuracion de passport con sus estrategias de autenticacion

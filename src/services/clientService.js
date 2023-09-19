@@ -1,7 +1,8 @@
+const boom = require('@hapi/boom')
 const { models } = require("../libs/sequelize");
 
-const find = () => {
-  const clients = models.Client.findAll({
+const find = async () => {
+  const clients = await models.Client.findAll({
     include: [
       {
         association: "sucursales",
@@ -13,8 +14,8 @@ const find = () => {
   return clients;
 };
 
-const findOne = (id) => {
-  const client = models.Client.findByPk(id, {
+const findOne = async (id) => {
+  const client = await models.Client.findByPk(id, {
     include: [
       {
         association: "branches",
@@ -23,13 +24,13 @@ const findOne = (id) => {
     ],
   });
 
-  if (!client) throw Error("No se encontro el cliente");
+  if (!client) throw boom.notFound("Client not found");
 
   return client;
 };
 
-const create = (body) => {
-  const client = models.Client.create(body);
+const create = async (body) => {
+  const client = await models.Client.create(body);
 
   return client;
 };

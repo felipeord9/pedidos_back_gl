@@ -30,7 +30,7 @@ const SellerSchema = {
   },
   mailCommercial: {
     type: DataTypes.STRING,
-    allowNull: 'false',
+    allowNull: false,
     field: 'mail_commercial'
   }
 }

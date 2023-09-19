@@ -2,6 +2,7 @@ const { Model, DataTypes, Sequelize } = require("sequelize");
 const { CLIENT_TABLE } = require("./clientModel");
 const { SELLER_TABLE } = require("./sellerModel");
 const { BRANCH_TABLE } = require("./branchModel");
+const { USER_TABLE } = require("./userModel")
 
 const ORDER_TABLE = "orders";
 
@@ -93,6 +94,17 @@ const OrderSchema = {
     allowNull: false,
     field: "created_at",
   },
+  /* createdBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'created_by',
+    references: {
+      model: USER_TABLE,
+      key: "id",
+    },
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+  }, */
   total: {
     type: DataTypes.BIGINT,
     allowNull: false
@@ -104,6 +116,7 @@ class Order extends Model {
     //this.belongsTo(models.Client, { as: "client" });
     //this.belongsTo(models.Seller, { as: "seller" });
     //this.belongsTo(models.Branch, { as: "branch" });
+    //this.belongsTo(models.User, { as: "createdBy" })
     this.belongsToMany(models.Product, {
       as: "items",
       through: models.OrderProduct,

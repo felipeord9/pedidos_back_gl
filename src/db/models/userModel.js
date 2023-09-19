@@ -1,6 +1,6 @@
 const { Model, DataTypes, Sequelize } = require("sequelize");
 
-const USER_TABLE = "clients";
+const USER_TABLE = "users";
 
 const UserSchema = {
   id: {
@@ -32,14 +32,9 @@ const UserSchema = {
     field: 'recovery_token'
   },
   role: {
-    type: DataTypes.ENUM(["seller", "agency", "admin"]),
+    type: DataTypes.ENUM(["vendedor", "agencia", "admin"]),
     allowNull: false,
-    defaultValue: 'seller'
-  },
-  positionCompany: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: 'position_company'
+    defaultValue: 'vendedor'
   },
   createdAt: {
     type: DataTypes.DATE,

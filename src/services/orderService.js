@@ -11,6 +11,32 @@ const find = () => {
   return orders
 };
 
+const findBySeller = (sellerId) => {
+  const orders = models.Order.findAll({
+    where: {
+      sellerId
+    },
+    include: [
+      "items"
+    ],
+  });
+
+  return orders
+};
+
+const findByCO = (coId) => {
+  const orders = models.Order.findAll({
+    where: {
+      coId
+    },
+    include: [
+      "items"
+    ],
+  });
+
+  return orders
+};
+
 const finOne = (id) => {
   const order = models.Order.findByPk(id)
 
@@ -20,7 +46,6 @@ const finOne = (id) => {
 }
 
 const findFilteredByDate = (initialDate, finalDate) => {
-  console.log(finalDate)
   const orders = models.Order.findAll({
     where: {
       [Op.and]: [
@@ -59,12 +84,15 @@ const remove = async (id) => {
     await models.OrderProduct.destroy({ where: { orderId: order.id } })
   })
   models.Order.sequelize.query(`ALTER SEQUENCE orders_id_seq RESTART WITH ${id};`)
+  models.Order.sequelize.query(`ALTER SEQUENCE co_${order.coId}_seq RESTART WITH ${order.rowId};`)
   await order.destroy(id)
   return id
 }
 
 module.exports = {
   find,
+  findBySeller,
+  findByCO,
   finOne,
   findFilteredByDate,
   create,

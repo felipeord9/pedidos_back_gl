@@ -1,23 +1,21 @@
-const express = require('express')
-const passport = require('passport')
-const AuthController = require('../../controllers/authController')
+const express = require("express");
+const passport = require("passport");
+const AuthController = require("../../controllers/authController");
 
-const router = express.Router()
+const router = express.Router();
 
-router.post(
-  '/login',
-  passport.authenticate('local', { session: false }),
-  AuthController.login
-)
+router
+  .post(
+    "/login",
+    passport.authenticate("local", { session: false }),
+    AuthController.login
+  )
+  .post(
+    '/change/password',
+    passport.authenticate("jwt", { session: false }),
+    AuthController.changePassword
+  )
+  .post("/send/recovery", AuthController.sendRecovery)
+  .post("/recovery/password", AuthController.changeRecoveryPassword);
 
-router.post(
-  '/recovery',
-  AuthController.recoveryPassword
-)
-
-router.post(
-  '/change-password',
-  AuthController.changePassword
-)
-
-module.exports = router
+module.exports = router;
