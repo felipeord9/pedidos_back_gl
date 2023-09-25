@@ -2,7 +2,7 @@ const boom = require('@hapi/boom')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const AuthService = require('./mailService')
+const MailService = require('./mailService')
 const UserService = require('./userService')
 const { config } = require('../config/config')
 
@@ -55,10 +55,10 @@ const sendRecovery = async (email) => {
     from: config.smtpEmail,
     to: user.email,
     subject: 'Email para recuperar contraseña',
-    html: `<b>Ingresa aquí http://localhost:3000/recuperacion/contrasena/${token}</b>`
+    html: `<b>Ingresa aquí ${config.recoveryUrl}/${token}</b>`
   }
 
-  const rta = await AuthService.sendEmails(mail)
+  const rta = await MailService.sendEmails(mail)
   await UserService.update(user.id, { recoveryToken: token })
   return rta
 }

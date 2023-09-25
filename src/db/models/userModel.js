@@ -11,7 +11,8 @@ const UserSchema = {
   rowId: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: 'row_id'
+    field: 'row_id',
+    unique: true
   },
   name: {
     type: DataTypes.STRING,

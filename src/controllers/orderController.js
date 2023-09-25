@@ -2,21 +2,14 @@ const OrderService = require('../services/orderService')
 
 const findAllOrders = async (req, res, next) => {
   try {
-    let data
-    if(Object.keys(req.query).length > 0) {
-      const { init, final } = req.query
-      const newFinal = new Date(final)
-      newFinal.setDate(newFinal.getDate() + 1)
-      data = await OrderService.findFilteredByDate(init, newFinal)
-    } else {
-      data = await OrderService.find()
-    }
+    const data = await OrderService.find()
 
     res.status(200).json({
       message: 'OK',
       data 
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 }
@@ -87,6 +80,7 @@ const createOrder = async (req, res, next) => {
       purchaseOrder: body.purchaseOrder,
       clientId: parseInt(body.client.nit),
       clientDescription: body.client.razonSocial,
+      userId: body.createdBy,
       sellerId: body.seller.id,
       sellerDescription: body.seller.tercero ? body.seller.tercero.razonSocial : body.seller.description,
       branchId: body.branch.id,

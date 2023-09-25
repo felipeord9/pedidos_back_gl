@@ -30,6 +30,7 @@ const findOneUser = async (req, res, next) => {
 const createUser = async (req, res, next) => {
   try {
     const { body } = req
+    console.log(body)
     const data = await UserService.create(body)
     
     res.status(201).json({
@@ -37,6 +38,7 @@ const createUser = async (req, res, next) => {
       data
     })
   } catch (error) {
+    console.log(error.message)
     next(error)
   }
 }

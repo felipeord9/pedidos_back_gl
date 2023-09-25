@@ -33,7 +33,7 @@ router
   .post(
     '/', 
     passport.authenticate('jwt', { session: false }), 
-    checkRoles('admin', "seller"), 
+    checkRoles('admin', "vendedor", "agencia"), 
     OrderController.createOrder
   )
   .post(

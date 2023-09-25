@@ -94,17 +94,17 @@ const OrderSchema = {
     allowNull: false,
     field: "created_at",
   },
-  /* createdBy: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    field: 'created_by',
+    field: 'user_id',
     references: {
       model: USER_TABLE,
       key: "id",
     },
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
-  }, */
+  },
   total: {
     type: DataTypes.BIGINT,
     allowNull: false
@@ -116,7 +116,7 @@ class Order extends Model {
     //this.belongsTo(models.Client, { as: "client" });
     //this.belongsTo(models.Seller, { as: "seller" });
     //this.belongsTo(models.Branch, { as: "branch" });
-    //this.belongsTo(models.User, { as: "createdBy" })
+    this.belongsTo(models.User, { as: 'user'})
     this.belongsToMany(models.Product, {
       as: "items",
       through: models.OrderProduct,

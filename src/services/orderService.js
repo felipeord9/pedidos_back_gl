@@ -4,7 +4,8 @@ const { models } = require("../libs/sequelize");
 const find = () => {
   const orders = models.Order.findAll({
     include: [
-      "items"
+      "items",
+      "user"
     ],
   });
 
@@ -17,7 +18,8 @@ const findBySeller = (sellerId) => {
       sellerId
     },
     include: [
-      "items"
+      "items",
+      "user"
     ],
   });
 
@@ -30,7 +32,8 @@ const findByCO = (coId) => {
       coId
     },
     include: [
-      "items"
+      "items",
+      "user"
     ],
   });
 
