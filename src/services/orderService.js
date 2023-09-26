@@ -7,6 +7,7 @@ const find = () => {
       "items",
       "user"
     ],
+    order: [["id", "DESC"]]
   });
 
   return orders
@@ -21,6 +22,7 @@ const findBySeller = (sellerId) => {
       "items",
       "user"
     ],
+    order: [["id", "DESC"]]
   });
 
   return orders
@@ -35,6 +37,7 @@ const findByCO = (coId) => {
       "items",
       "user"
     ],
+    order: [["id", "DESC"]]
   });
 
   return orders
@@ -63,6 +66,7 @@ const findFilteredByDate = (initialDate, finalDate) => {
     include: [
       "items"
     ],
+    order: [["id", "DESC"]]
   });
 
   if(!orders) throw Error('No hay pedidos en ese rango de fechas')
