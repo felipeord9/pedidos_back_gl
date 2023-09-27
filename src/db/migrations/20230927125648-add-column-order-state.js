@@ -6,9 +6,9 @@ const { ORDER_TABLE } = require("../models/orderModel")
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn(ORDER_TABLE, 'state', {
-      type: DataTypes.ENUM(["alistamiento", "verificando pago", "en ruta", "rechazado", "entregado"]),
+      type: DataTypes.ENUM(["pedido nuevo", "alistamiento", "verificando pago", "en ruta", "rechazado", "entregado"]),
       allowNull: false,
-      defaultValue: 'alistamiento'
+      defaultValue: 'pedido_nuevo'
     })
   },
 

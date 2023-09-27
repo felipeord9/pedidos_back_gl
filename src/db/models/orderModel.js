@@ -32,9 +32,9 @@ const OrderSchema = {
     field: 'purchase_order'
   },
   state: {
-    type: DataTypes.ENUM(["alistamiento", "verificando pago", "en ruta", "rechazado", "entregado"]),
+    type: DataTypes.ENUM(["pedido nuevo", "alistamiento", "verificando pago", "en ruta", "rechazado", "entregado"]),
     allowNull: false,
-    defaultValue: 'alistamiento'
+    defaultValue: 'pedido nuevo'
   },
   reasonForRejection: {
     type: DataTypes.TEXT,
