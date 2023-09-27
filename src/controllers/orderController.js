@@ -110,6 +110,20 @@ const createOrder = async (req, res, next) => {
   }
 }
 
+const updateOrder = async (req, res, next) => {
+  try {
+    const { body, params: { id }} = req
+    const data = await OrderService.update(id, body)
+
+    res.status(200).json({
+      message: "Updated",
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const addItemOrder = async (req, res, next) => {
   try {
     const { body } = req
@@ -145,6 +159,7 @@ module.exports = {
   findOneOrder,
   findFilteredOrdersByDate,
   createOrder,
+  updateOrder,
   addItemOrder,
   deleteOrder
 }

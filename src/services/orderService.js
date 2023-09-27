@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, or } = require("sequelize");
 const { models } = require("../libs/sequelize");
 
 const find = () => {
@@ -85,6 +85,13 @@ const create = async (body) => {
   return newOrder
 }
 
+const update = async (id, changes) => {
+  const order = await finOne(id)
+  const updatedOrder = order.update(changes)
+
+  return updatedOrder
+}
+
 const remove = async (id) => {
   const order = await finOne(id)
   models.Order.beforeDestroy(async (order) => {
@@ -103,6 +110,7 @@ module.exports = {
   finOne,
   findFilteredByDate,
   create,
+  update,
   addItem,
   remove
 }

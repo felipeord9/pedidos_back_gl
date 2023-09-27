@@ -36,6 +36,12 @@ router
     checkRoles('admin', "vendedor", "agencia"), 
     OrderController.createOrder
   )
+  .patch(
+    "/:id",
+    passport.authenticate('jwt', { session: false }),
+    checkRoles('admin', 'agencia'),
+    OrderController.updateOrder
+  )
   .post(
     '/add-item', 
     OrderController.addItemOrder

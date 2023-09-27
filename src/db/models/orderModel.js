@@ -18,7 +18,7 @@ const OrderSchema = {
     field: 'row_id'
   },
   deliveryDate: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
     field: 'delivery_field'
   },
@@ -30,6 +30,21 @@ const OrderSchema = {
     type:DataTypes.STRING,
     allowNull: true,
     field: 'purchase_order'
+  },
+  state: {
+    type: DataTypes.ENUM(["alistamiento", "verificando pago", "en ruta", "rechazado", "entregado"]),
+    allowNull: false,
+    defaultValue: 'alistamiento'
+  },
+  reasonForRejection: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'reason_for_rejection'
+  },
+  reasonForDelivery: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'reason_for_delivery'
   },
   coId: {
     type: DataTypes.STRING,
@@ -94,6 +109,10 @@ const OrderSchema = {
     allowNull: false,
     field: "created_at",
   },
+  total: {
+    type: DataTypes.BIGINT,
+    allowNull: false
+  },
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -104,10 +123,6 @@ const OrderSchema = {
     },
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
-  },
-  total: {
-    type: DataTypes.BIGINT,
-    allowNull: false
   },
 };
 
