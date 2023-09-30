@@ -18,8 +18,9 @@ const findOne = async (id) => {
   const client = await models.Client.findByPk(id, {
     include: [
       {
-        association: "branches",
-        include: ["seller"],
+        association: "sucursales",
+        attributes: [["id", "idUn"], ["branch", "id"], "descripcion"],
+        include: ["vendedor"],
       },
     ],
   });
@@ -35,8 +36,16 @@ const create = async (body) => {
   return client;
 };
 
+const update = async (id, changes) => {
+  const client = await findOne(id)
+  const updatedClient = await client.update(changes)
+
+  return updatedClient
+}
+
 module.exports = {
   find,
   findOne,
   create,
+  update
 };

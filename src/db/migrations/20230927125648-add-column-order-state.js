@@ -8,7 +8,7 @@ module.exports = {
     await queryInterface.addColumn(ORDER_TABLE, 'state', {
       type: DataTypes.ENUM(["pedido nuevo", "alistamiento", "verificando pago", "en ruta", "rechazado", "entregado"]),
       allowNull: false,
-      defaultValue: 'pedido_nuevo'
+      defaultValue: 'pedido nuevo'
     })
   },
 
