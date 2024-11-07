@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer")
 const pdf = require('html-pdf')
 const { config } = require('../config/config')
 
-async function sendEmails() {  
+async function sendEmails(infoEmail) {  
   const transporter = nodemailer.createTransport({
     host: config.smtpHost,
     port: config.smtpPort,
@@ -15,7 +15,9 @@ async function sendEmails() {
 
   if(!transporter) throw new Error('Error al conectar con el servidor de correo')
 
-  return transporter
+  const info = await transporter.sendMail(infoEmail)
+
+  return info
 }
 
 async function generatePDF(info, callback) {

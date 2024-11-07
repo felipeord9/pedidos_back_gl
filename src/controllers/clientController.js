@@ -41,8 +41,23 @@ const createClient = async (req, res, next) => {
   }
 }
 
+const updateClient =async (req, res, next) => {
+  try {
+    const { body, params: { id } } = req
+    const data = await ClientService.update(id, body)
+
+    res.status(200).json({
+      message: 'Updated',
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   findAllClients,
   findOneClient,
-  createClient
+  createClient,
+  updateClient
 }

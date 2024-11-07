@@ -17,9 +17,10 @@ const BranchSchema = {
       is: /^\d{3}$/
     }
   },
-  description: {
+  descripcion: {
     type: DataTypes.STRING,
     allowNull: false,
+    field: "description"
   },
   sellerId: {
     type: DataTypes.INTEGER,
@@ -52,7 +53,7 @@ class Branch extends Model {
       foreignKey: 'clientId'
     })
     this.belongsTo(models.Seller, {
-      as: 'seller',
+      as: 'vendedor',
       foreignKey: 'sellerId'
     })
   }

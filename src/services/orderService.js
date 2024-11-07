@@ -1,33 +1,80 @@
+const { Op, or } = require("sequelize");
 const { models } = require("../libs/sequelize");
 
 const find = () => {
   const orders = models.Order.findAll({
     include: [
-      "client",
-      "seller",
-      "branch",
-      "items"
+      "items",
+      "user"
     ],
+    order: [["id", "DESC"]],
+    limit: 12000,
+  });
+
+  return orders
+};
+
+const findBySeller = (sellerId) => {
+  const orders = models.Order.findAll({
+    where: {
+      sellerId
+    },
+    include: [
+      "items",
+      "user"
+    ],
+    order: [["id", "DESC"]],
+    limit: 5000,
+  });
+
+  return orders
+};
+
+const findByCO = (coId) => {
+  const orders = models.Order.findAll({
+    where: {
+      coId
+    },
+    include: [
+      "items",
+      "user"
+    ],
+    order: [["id", "DESC"]],
+    limit: 5000,
   });
 
   return orders
 };
 
 const finOne = (id) => {
-  const order = models.Order.findByPk(id,{
-    include: [
-      "client",
-      "seller",
-      "branch",
-      {
-        association: "items"
-      },
-    ],
-  })
+  const order = models.Order.findByPk(id)
 
   if(!order) throw Error('No se encontró la orden')
 
   return order
+}
+
+const findFilteredByDate = (initialDate, finalDate) => {
+  const orders = models.Order.findAll({
+    where: {
+      [Op.and]: [
+        {
+          createdAt: { [Op.gte] : initialDate}
+        },
+        {
+          createdAt : { [Op.lte]: finalDate}
+        }
+      ]
+    },
+    include: [
+      "items"
+    ],
+    order: [["id", "DESC"]]
+  });
+
+  if(!orders) throw Error('No hay pedidos en ese rango de fechas')
+
+  return orders
 }
 
 const addItem = (body) => {
@@ -41,10 +88,32 @@ const create = async (body) => {
   return newOrder
 }
 
+const update = async (id, changes) => {
+  const order = await finOne(id)
+  const updatedOrder = order.update(changes)
+
+  return updatedOrder
+}
+
+const remove = async (id) => {
+  const order = await finOne(id)
+  models.Order.beforeDestroy(async (order) => {
+    await models.OrderProduct.destroy({ where: { orderId: order.id } })
+  })
+  models.Order.sequelize.query(`ALTER SEQUENCE orders_id_seq RESTART WITH ${id};`)
+  models.Order.sequelize.query(`ALTER SEQUENCE co_${order.coId}_seq RESTART WITH ${order.rowId};`)
+  await order.destroy(id)
+  return id
+}
 
 module.exports = {
   find,
+  findBySeller,
+  findByCO,
   finOne,
+  findFilteredByDate,
   create,
-  addItem
+  update,
+  addItem,
+  remove
 }

@@ -27,7 +27,37 @@ const findOneSeller = async (req, res, next) => {
   }
 }
 
+const createSeller = async (req, res, next) => {
+  try {
+    const { body } = req
+    const data = await SellerService.create(body)
+
+    res.status(201).json({
+      message: 'Created',
+      data
+    })
+  } catch (error) {
+    next(error)    
+  }
+}
+
+const updateSeller = async (req, res, next) => {
+  try {
+    const { body, params: { id } } = req
+    const data = await SellerService.update(id, body)
+
+    res.status(200).json({
+      message: 'Updated',
+      data
+    })
+  } catch (error) {
+    next(error)    
+  }
+}
+
 module.exports = {
   findAllSellers,
-  findOneSeller
+  findOneSeller,
+  createSeller,
+  updateSeller
 }

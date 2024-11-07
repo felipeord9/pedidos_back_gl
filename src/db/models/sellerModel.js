@@ -21,16 +21,16 @@ const SellerSchema = {
   },
   agency: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   mailAgency: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: 'mail_agency'
   },
   mailCommercial: {
     type: DataTypes.STRING,
-    allowNull: 'false',
+    allowNull: false,
     field: 'mail_commercial'
   }
 }

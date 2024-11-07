@@ -9,6 +9,35 @@ const findAllOrders = async (req, res, next) => {
       data 
     })
   } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+const findAllOrdersBySeller = async (req, res, next) => {
+  try {
+    const { sellerId } = req.params
+    const data = await OrderService.findBySeller(sellerId)
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const findAllOrdersByCO = async (req, res, next) => {
+  try {
+    const { coId } = req.params
+    const data = await OrderService.findByCO(coId)
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
     next(error)
   }
 }
@@ -27,24 +56,45 @@ const findOneOrder = async (req, res, next) => {
   }
 }
 
+const findFilteredOrdersByDate = async (req, res, next) => {
+  try {
+    const { query: { init, final }} = req
+    const data = await OrderService.findFilteredByDate(init, final)
+
+    res.status(200).json({
+      message: 'OK',
+      data
+    })
+  } catch (error) {
+    
+  }
+}
+
 const createOrder = async (req, res, next) => {
   try {
     const { body } = req
+    console.log(body)
     const data = await OrderService.create({
       deliveryDate: body.deliveryDate,
       observations: body.observations,
       purchaseOrder: body.purchaseOrder,
-      clientId: parseInt(body.client.id),
+      clientId: parseInt(body.client.nit),
+      clientDescription: body.client.razonSocial,
+      userId: body.createdBy,
       sellerId: body.seller.id,
+      sellerDescription: body.seller.tercero ? body.seller.tercero.razonSocial : body.seller.description,
       branchId: body.branch.id,
+      branchDescription: body.branch.descripcion,
+      coId: body.agency.id,
+      coDescription: body.agency.descripcion,
       createdAt: body.createdAt,
       total: parseInt(body.products.total.split('.').join(''))
     })
     
     for(let product of body.products.agregados) {
       await OrderService.addItem({
-        amount: parseInt(product.amount),
-        price: parseInt(product.price.split('.').join('')),
+        amount: Number(product.amount),
+        price: Number(product.price.split('.').join('')),
         orderId: data.id,
         productId: product.id
       })
@@ -56,6 +106,21 @@ const createOrder = async (req, res, next) => {
     })
   } catch (error) {
     console.log(error)
+    next(error)
+  }
+}
+
+const updateOrder = async (req, res, next) => {
+  try {
+    const { body, params: { id }} = req
+    const data = await OrderService.update(id, body)
+
+    res.status(200).json({
+      message: "Updated",
+      data
+    })
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -73,9 +138,28 @@ const addItemOrder = async (req, res, next) => {
   }
 }
 
+const deleteOrder = async (req, res, next) => {
+  try {
+    const { params: { id } } = req
+    const data = await OrderService.remove(id)
+
+    res.status(202).json({
+      message: 'Deleted',
+      data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   findAllOrders,
+  findAllOrdersBySeller,
+  findAllOrdersByCO,
   findOneOrder,
+  findFilteredOrdersByDate,
   createOrder,
-  addItemOrder
+  updateOrder,
+  addItemOrder,
+  deleteOrder
 }
