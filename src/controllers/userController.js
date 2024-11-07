@@ -17,7 +17,7 @@ const findOneUser = async (req, res, next) => {
   try {
     const { params: { id } } = req;
     const data = await UserService.findOne(id);
-
+    console.log(data)
     res.status(200).json({
       message: 'OK',
       data

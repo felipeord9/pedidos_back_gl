@@ -7,7 +7,8 @@ const find = () => {
       "items",
       "user"
     ],
-    order: [["id", "DESC"]]
+    order: [["id", "DESC"]],
+    limit: 12000,
   });
 
   return orders
@@ -22,7 +23,8 @@ const findBySeller = (sellerId) => {
       "items",
       "user"
     ],
-    order: [["id", "DESC"]]
+    order: [["id", "DESC"]],
+    limit: 5000,
   });
 
   return orders
@@ -37,7 +39,8 @@ const findByCO = (coId) => {
       "items",
       "user"
     ],
-    order: [["id", "DESC"]]
+    order: [["id", "DESC"]],
+    limit: 5000,
   });
 
   return orders

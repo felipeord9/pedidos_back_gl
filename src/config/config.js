@@ -5,6 +5,7 @@ const config = {
     host: process.env.HOST,
     dbUrl: process.env.DB_URL,
     recoveryUrl: process.env.RECOVERY_URL,
+    requestUrl: process.env.REQUEST_URL,
     isProd: false,
     smtpHost: process.env.SMTP_HOST,
     smtpPort: process.env.SMTP_PORT,
