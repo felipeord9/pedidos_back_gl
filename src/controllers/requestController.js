@@ -301,7 +301,7 @@ const sendMail = async (req, res, next) => {
                       <td colspan="2" style='font-size: 10px;'>${elem.description}</td>
                       <td style="width: 50px; font-size: 10px;">${elem.amount}</td>
                       <td style="width: 25px; font-size: 10px;">${elem.um}</td>
-                      <td style='font-size: 10px;'>$${elem.costo.toLocaleString()}</td>
+                      <td style='font-size: 10px;'>$${elem.cost.toLocaleString()}</td>
                       <td style='font-size: 10px;'>$${elem.price.toLocaleString()}</td>
                       <td style='font-size: 10px;'>${elem.currentMargen}%</td>
                       <td style='font-size: 10px;'>$${elem.priceAuth}</td>
@@ -333,12 +333,12 @@ const sendMail = async (req, res, next) => {
           });
         }        
         const transporter = nodemailer.createTransport({
-          host: 'mail.granlangostino.net',
-            port: 465,
+          host: config.smtpHost,
+            port: config.smtpPort,
             secure: true,
             auth: {
-              user: 'pedidos@granlangostino.net',
-              pass: 'lango2023'
+              user: config.smtpEmail,
+              pass: config.smtpPassword
             }
         });
   
@@ -503,7 +503,6 @@ const sendMail = async (req, res, next) => {
             </html>
             
             `}
-        
             transporter.sendMail(mensaje,(error,info)=> {
               if(error){
                 res.json({
@@ -535,22 +534,177 @@ const sendMail = async (req, res, next) => {
     try {
       const { body } = req
 
-      console.log(`${body.emisor}`)
-           
-        const transporter = nodemailer.createTransport({
-          host: 'mail.granlangostino.net',
-            port: 465,
-            secure: true,
-            auth: {
-              user: 'pedidos@granlangostino.net',
-              pass: 'lango2023'
+      const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <style>
+            * {
+            font-size: 8px;
             }
-        });
+            table {
+              border-collapse: collapse;
+              width: 100%;
+            }
+            thead {
+              background-color: #d6d6d6;
+              color: #000;
+            }
+            tbody {
+              display: block;
+              min-height: 100vh;
+            }
+            tr {
+              display: table;
+              width: 100%;
+              table-layout: fixed;
+  
+            }
+            th, td {
+              border: 1px solid black;
+              padding: 8px;
+              text-align: left;
+            }
+          </style>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Nueva Solicitud</title>
+        </head>
+        <body>
+          <div
+            style="
+              font-family: Arial, Helvetica, sans-serif;
+              padding: 1rem 2rem;
+            "
+          >
+            <h1 style="text-align: center; font-size: 18px; font-weight: bold">Solicitud Autorización de Precio</h1>
+            <div style="position: relative; font-size: 12px; width: 100%; height: 100%;">
+              <div style="margin: auto; margin-bottom: 15px;">
+                <h2 style="font-size: 12px; font-weight: bolder; margin: 0">
+                  EL GRAN LANGOSTINO S.A.S.
+                </h2>
+                <p style="margin: 0.3rem 0;font-size: 12px;"><strong style='font-size: 10px;'>Nit: 835001216</strong></p>
+                <p style="margin: 0.3rem 0;font-size: 10px;;">Tel: 5584982 - 3155228124</p>
+              </div>
+            </div>
+            <hr style="width: 100%; border: 1.5px solid black;"/>
+            <div style="width: 100%; font-size: 13px; margin-top: 10px;">
+              <div style="position: relative; margin-bottom: 2rem;">
+                <div style="position: relative; border: 1px solid black; border-radius: 5px; width: 47%; padding: 1rem; font-size: 12px; ">
+                  <h3 style="background: #fff; font-size: 10px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 11px;">CLIENTE</h3>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Nombre: </strong>${
+                      body.nameClient
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Nit: </strong>${
+                      body.nitClient
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Sucursal: </strong>${
+                      body.branchClient
+                    }</p>
+                  </div>
+                </div>
+                <div style="position: absolute; top: 0; right: 0; border: 1px solid black; border-radius: 5px; width: 47%; padding: 1rem; font-size: 12px;">
+                  <h3 style="background: #fff; font-size: 8px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 11px;">REMITENTE</h3>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Instalación: </strong>${
+                      body.install
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Enviado por: </strong>${
+                      body.createdBy
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; white-space: nowrap; font-size: 10px;">Fecha Envío:</strong>${
+                      new Date(body.createdAt).toLocaleDateString()} - ${new Date(body.createdAt).toLocaleTimeString()
+                    }</p>
+                  </div>
+                </div>
+              </div>
+              <div style="width: 100%;">
+                <table style="width: 100%; font-size: 12px; border: 1px solid black; ">
+                  <thead>
+                    <tr>
+                      <th style="width: 25px; font-size: 10px;">REF.</th>
+                      <th colspan="2" style='font-size: 10px;'>DESCRIPCION</th>
+                      <th style="width: 50px; font-size: 10px;">CANTIDAD</th>
+                      <th style="width: 25px; font-size: 10px;">UM</th>
+                      <th style='font-size: 10px;'>COSTO PROMEDIO</th>
+                      <th style='font-size: 10px;'>PRECIO DE LISTA</th>
+                      <th style='font-size: 10px;'>MARGEN ACTUAL</th>
+                      <th style='font-size: 10px;'>PRECIO POR AUTORIZAR</th>
+                      <th style='font-size: 10px;'>NUEVO MARGEN</th>
+                      <th style='font-size: 10px;'>ESTADO</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  ${body.items.map((elem) => {
+                    return `
+                    <tr>
+                      <td style="width: 25px; font-size: 10px;">${elem.id}</td>
+                      <td colspan="2" style='font-size: 10px;'>${elem.description}</td>
+                      <td style="width: 50px; font-size: 10px;">${elem.RequestProduct.amount}</td>
+                      <td style="width: 25px; font-size: 10px;">${elem.um}</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.cost.toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.price.toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.currentMargen}%</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.priceAuth}</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.newMargen}%</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.state ? (elem.RequestProduct.state).toUpperCase() : ''}</td>
+                      </tr>
+                      `;
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div style="position: relative; border: 1px solid black; border-radius: 5px; width: 99%; height: auto; padding: 1rem; margin-top: 14px;">
+                <h3 style="background: #fff; font-size: 10px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 10px;">OBSERVACIONES:</h3>
+                <div>
+                  <p style="margin: 0; padding: 1rem; font-size: 11px;">
+                    ${body.observations}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+      `;
+      mailService.generatePDF(html, (error, pdfBuffer) => {
+        if (error) {
+          return res.status(400).json({
+            status: "ERROR",
+            error,
+          });
+        }
+      const transporter = nodemailer.createTransport({
+        host: config.smtpHost,
+          port: config.smtpPort,
+          secure: true,
+          auth: {
+            user: config.smtpEmail,
+            pass: config.smtpPassword
+          }
+      });
+      const attachments = [
+        {
+          filename: `Solicitud de precio.pdf`,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        }
+      ];
         const mensaje={
             from: config.smtpEmail,
             to: body.emisor,
             cc: 'precios1@granlangostino.net, jefedecostos@granlangostino.net',
             subject: "¡RESPUESTA A SOLICITUD DE PRECIO!",
+            attachments,
             html: `
             <!DOCTYPE html>
             <html lang="en">
@@ -708,13 +862,8 @@ const sendMail = async (req, res, next) => {
                   });
                   console.log('Correo enviado a:'+info.response)
                 }
-              })
-            /* transporter.sendMail(mensaje, (error,info)=>{
-              if (error) {
-                return console.log('Error al enviar el correo al cliente:', error);
-              }
-              console.log('Correo electrónico enviado:', info.response);
-            }) */      
+              })     
+        }); 
       res.status(200)
       } catch (error) {
       console.log(error);
@@ -726,21 +875,177 @@ const sendMail = async (req, res, next) => {
 const sendConfirm = async (req, res, next) => {
   try {
     const { body } = req
-    console.log(`${body.emisor}`)
-      const transporter = nodemailer.createTransport({
-        host: 'mail.granlangostino.net',
-          port: 465,
-          secure: true,
-          auth: {
-            user: 'pedidos@granlangostino.net',
-            pass: 'lango2023'
-          }
-      });
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <style>
+            * {
+            font-size: 8px;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+            }
+            thead {
+              background-color: #d6d6d6;
+              color: #000;
+            }
+            tbody {
+              display: block;
+              min-height: 100vh;
+            }
+            tr {
+              display: table;
+              width: 100%;
+              table-layout: fixed;
+  
+            }
+            th, td {
+              border: 1px solid black;
+              padding: 8px;
+              text-align: left;
+            }
+          </style>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Nueva Solicitud</title>
+        </head>
+        <body>
+          <div
+            style="
+              font-family: Arial, Helvetica, sans-serif;
+              padding: 1rem 2rem;
+            "
+          >
+            <h1 style="text-align: center; font-size: 18px; font-weight: bold">Solicitud Autorización de Precio</h1>
+            <div style="position: relative; font-size: 12px; width: 100%; height: 100%;">
+              <div style="margin: auto; margin-bottom: 15px;">
+                <h2 style="font-size: 12px; font-weight: bolder; margin: 0">
+                  EL GRAN LANGOSTINO S.A.S.
+                </h2>
+                <p style="margin: 0.3rem 0;font-size: 12px;"><strong style='font-size: 10px;'>Nit: 835001216</strong></p>
+                <p style="margin: 0.3rem 0;font-size: 10px;;">Tel: 5584982 - 3155228124</p>
+              </div>
+            </div>
+            <hr style="width: 100%; border: 1.5px solid black;"/>
+            <div style="width: 100%; font-size: 13px; margin-top: 10px;">
+              <div style="position: relative; margin-bottom: 2rem;">
+                <div style="position: relative; border: 1px solid black; border-radius: 5px; width: 47%; padding: 1rem; font-size: 12px; ">
+                  <h3 style="background: #fff; font-size: 10px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 11px;">CLIENTE</h3>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Nombre: </strong>${
+                      body.nameClient
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Nit: </strong>${
+                      body.nitClient
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Sucursal: </strong>${
+                      body.branchClient
+                    }</p>
+                  </div>
+                </div>
+                <div style="position: absolute; top: 0; right: 0; border: 1px solid black; border-radius: 5px; width: 47%; padding: 1rem; font-size: 12px;">
+                  <h3 style="background: #fff; font-size: 8px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 11px;">REMITENTE</h3>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Instalación: </strong>${
+                      body.install
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Enviado por: </strong>${
+                      body.createdBy
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; white-space: nowrap; font-size: 10px;">Fecha Envío:</strong>${
+                      new Date(body.createdAt).toLocaleDateString()} - ${new Date(body.createdAt).toLocaleTimeString()
+                    }</p>
+                  </div>
+                </div>
+              </div>
+              <div style="width: 100%;">
+                <table style="width: 100%; font-size: 12px; border: 1px solid black; ">
+                  <thead>
+                    <tr>
+                      <th style="width: 25px; font-size: 10px;">REF.</th>
+                      <th colspan="2" style='font-size: 10px;'>DESCRIPCION</th>
+                      <th style="width: 50px; font-size: 10px;">CANTIDAD</th>
+                      <th style="width: 25px; font-size: 10px;">UM</th>
+                      <th style='font-size: 10px;'>COSTO PROMEDIO</th>
+                      <th style='font-size: 10px;'>PRECIO DE LISTA</th>
+                      <th style='font-size: 10px;'>MARGEN ACTUAL</th>
+                      <th style='font-size: 10px;'>PRECIO POR AUTORIZAR</th>
+                      <th style='font-size: 10px;'>NUEVO MARGEN</th>
+                      <th style='font-size: 10px;'>ESTADO</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  ${body.items.map((elem) => {
+                    return `
+                    <tr>
+                      <td style="width: 25px; font-size: 10px;">${elem.id}</td>
+                      <td colspan="2" style='font-size: 10px;'>${elem.description}</td>
+                      <td style="width: 50px; font-size: 10px;">${elem.RequestProduct.amount}</td>
+                      <td style="width: 25px; font-size: 10px;">${elem.um}</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.cost.toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.price.toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.currentMargen}%</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.priceAuth}</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.newMargen}%</td>
+                      <td style='font-size: 10px;'>APROBADO</td>
+                      </tr>
+                      `;
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div style="position: relative; border: 1px solid black; border-radius: 5px; width: 99%; height: auto; padding: 1rem; margin-top: 14px;">
+                <h3 style="background: #fff; font-size: 10px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 10px;">OBSERVACIONES:</h3>
+                <div>
+                  <p style="margin: 0; padding: 1rem; font-size: 11px;">
+                    ${body.observations}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+      `;
+    mailService.generatePDF(html, (error, pdfBuffer) => {
+      if (error) {
+        return res.status(400).json({
+          status: "ERROR",
+          error,
+        });
+      }
+    const transporter = nodemailer.createTransport({
+      host: config.smtpHost,
+        port: config.smtpPort,
+        secure: true,
+        auth: {
+          user: config.smtpEmail,
+          pass: config.smtpPassword
+        }
+    });
+    const attachments = [
+      {
+        filename: `Solicitud de precio.pdf`,
+        content: pdfBuffer,
+        contentType: "application/pdf",
+      }
+    ];
       const mensaje={
           from: config.smtpEmail,
           to: body.emisor,
           cc: 'precios1@granlangostino.net, jefedecostos@granlangostino.net',
           subject: "¡RESPUESTA A SOLICITUD DE PRECIO!",
+          attachments,
           html: `
           <!DOCTYPE html>
           <html lang="en">
@@ -904,7 +1209,8 @@ const sendConfirm = async (req, res, next) => {
               return console.log('Error al enviar el correo al cliente:', error);
             }
             console.log('Correo electrónico enviado:', info.response);
-          }) */      
+          }) */ 
+        });     
     res.status(200)
     } catch (error) {
     console.log(error);
@@ -916,21 +1222,177 @@ const sendConfirm = async (req, res, next) => {
 const sendRechazo = async (req, res, next) => {
   try {
     const { body } = req
-    console.log(`${body.emisor}`)
-      const transporter = nodemailer.createTransport({
-        host: 'mail.granlangostino.net',
-          port: 465,
-          secure: true,
-          auth: {
-            user: 'pedidos@granlangostino.net',
-            pass: 'lango2023'
-          }
-      });
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <style>
+            * {
+            font-size: 8px;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+            }
+            thead {
+              background-color: #d6d6d6;
+              color: #000;
+            }
+            tbody {
+              display: block;
+              min-height: 100vh;
+            }
+            tr {
+              display: table;
+              width: 100%;
+              table-layout: fixed;
+  
+            }
+            th, td {
+              border: 1px solid black;
+              padding: 8px;
+              text-align: left;
+            }
+          </style>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Nueva Solicitud</title>
+        </head>
+        <body>
+          <div
+            style="
+              font-family: Arial, Helvetica, sans-serif;
+              padding: 1rem 2rem;
+            "
+          >
+            <h1 style="text-align: center; font-size: 18px; font-weight: bold">Solicitud Autorización de Precio</h1>
+            <div style="position: relative; font-size: 12px; width: 100%; height: 100%;">
+              <div style="margin: auto; margin-bottom: 15px;">
+                <h2 style="font-size: 12px; font-weight: bolder; margin: 0">
+                  EL GRAN LANGOSTINO S.A.S.
+                </h2>
+                <p style="margin: 0.3rem 0;font-size: 12px;"><strong style='font-size: 10px;'>Nit: 835001216</strong></p>
+                <p style="margin: 0.3rem 0;font-size: 10px;;">Tel: 5584982 - 3155228124</p>
+              </div>
+            </div>
+            <hr style="width: 100%; border: 1.5px solid black;"/>
+            <div style="width: 100%; font-size: 13px; margin-top: 10px;">
+              <div style="position: relative; margin-bottom: 2rem;">
+                <div style="position: relative; border: 1px solid black; border-radius: 5px; width: 47%; padding: 1rem; font-size: 12px; ">
+                  <h3 style="background: #fff; font-size: 10px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 11px;">CLIENTE</h3>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Nombre: </strong>${
+                      body.nameClient
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Nit: </strong>${
+                      body.nitClient
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Sucursal: </strong>${
+                      body.branchClient
+                    }</p>
+                  </div>
+                </div>
+                <div style="position: absolute; top: 0; right: 0; border: 1px solid black; border-radius: 5px; width: 47%; padding: 1rem; font-size: 12px;">
+                  <h3 style="background: #fff; font-size: 8px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 11px;">REMITENTE</h3>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Instalación: </strong>${
+                      body.install
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; font-size: 10px;">Enviado por: </strong>${
+                      body.createdBy
+                    }</p>
+                  </div>
+                  <div>
+                    <p style="margin: 0; width: 100%; font-size: 10px;"><strong style="margin-right: 0.5rem; white-space: nowrap; font-size: 10px;">Fecha Envío:</strong>${
+                      new Date(body.createdAt).toLocaleDateString()} - ${new Date(body.createdAt).toLocaleTimeString()
+                    }</p>
+                  </div>
+                </div>
+              </div>
+              <div style="width: 100%;">
+                <table style="width: 100%; font-size: 12px; border: 1px solid black; ">
+                  <thead>
+                    <tr>
+                      <th style="width: 25px; font-size: 10px;">REF.</th>
+                      <th colspan="2" style='font-size: 10px;'>DESCRIPCION</th>
+                      <th style="width: 50px; font-size: 10px;">CANTIDAD</th>
+                      <th style="width: 25px; font-size: 10px;">UM</th>
+                      <th style='font-size: 10px;'>COSTO PROMEDIO</th>
+                      <th style='font-size: 10px;'>PRECIO DE LISTA</th>
+                      <th style='font-size: 10px;'>MARGEN ACTUAL</th>
+                      <th style='font-size: 10px;'>PRECIO POR AUTORIZAR</th>
+                      <th style='font-size: 10px;'>NUEVO MARGEN</th>
+                      <th style='font-size: 10px;'>ESTADO</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  ${body.items.map((elem) => {
+                    return `
+                    <tr>
+                      <td style="width: 25px; font-size: 10px;">${elem.id}</td>
+                      <td colspan="2" style='font-size: 10px;'>${elem.description}</td>
+                      <td style="width: 50px; font-size: 10px;">${elem.RequestProduct.amount}</td>
+                      <td style="width: 25px; font-size: 10px;">${elem.um}</td>
+                      <td style='font-size: 10px;'>$${(elem.RequestProduct.cost).toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>$${(elem.RequestProduct.price).toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.currentMargen}%</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.priceAuth}</td>
+                      <td style='font-size: 10px;'>${elem.RequestProduct.newMargen}%</td>
+                      <td style='font-size: 10px;'>RECHAZADO</td>
+                      </tr>
+                      `;
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div style="position: relative; border: 1px solid black; border-radius: 5px; width: 99%; height: auto; padding: 1rem; margin-top: 14px;">
+                <h3 style="background: #fff; font-size: 10px; position: absolute; top: -8px; left: 25px; margin: 0; padding: 0px 10px;">OBSERVACIONES:</h3>
+                <div>
+                  <p style="margin: 0; padding: 1rem; font-size: 11px;">
+                    ${body.observations}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+      `;
+    mailService.generatePDF(html, (error, pdfBuffer) => {
+      if (error) {
+        return res.status(400).json({
+          status: "ERROR",
+          error,
+        });
+      }
+    const transporter = nodemailer.createTransport({
+      host: config.smtpHost,
+        port: config.smtpPort,
+        secure: true,
+        auth: {
+          user: config.smtpEmail,
+          pass: config.smtpPassword
+        }
+    });
+    const attachments = [
+      {
+        filename: `Solicitud de precio.pdf`,
+        content: pdfBuffer,
+        contentType: "application/pdf",
+      }
+    ];
       const mensaje={
           from: config.smtpEmail,
           to: body.emisor,
           cc: 'precios1@granlangostino.net, jefedecostos@granlangostino.net',
           subject: "¡RESPUESTA A SOLICITUD DE PRECIO!",
+          attachments,
           html: `
           <!DOCTYPE html>
           <html lang="en">
@@ -1088,7 +1550,8 @@ const sendRechazo = async (req, res, next) => {
               });
               console.log('Correo enviado a:'+info.response)
             }
-          })      
+          })  
+        });    
       res.status(200)
     } catch (error) {
     console.log(error);
