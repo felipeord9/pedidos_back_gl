@@ -161,7 +161,7 @@ const createRequest = async (req,res,next)=>{
         for(let product of body.productosAgr.agregados) {
           await RequestService.addItem({
             amount: product.amount,
-            cost: Number(product.costo[0]),
+            costo: Number(product.costo[0]),
             price: Number(product.price[0]),
             priceAuth: Number(product.priceAuth.split(',').join('')),
             requestId: data.id,
@@ -301,8 +301,8 @@ const sendMail = async (req, res, next) => {
                       <td colspan="2" style='font-size: 10px;'>${elem.description}</td>
                       <td style="width: 50px; font-size: 10px;">${elem.amount}</td>
                       <td style="width: 25px; font-size: 10px;">${elem.um}</td>
-                      <td style='font-size: 10px;'>$${elem.cost.toLocaleString()}</td>
-                      <td style='font-size: 10px;'>$${elem.price.toLocaleString()}</td>
+                      <td style='font-size: 10px;'>$${elem.costo.toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>$${elem.price.toLocaleString('es-ES')}</td>
                       <td style='font-size: 10px;'>${elem.currentMargen}%</td>
                       <td style='font-size: 10px;'>$${elem.priceAuth}</td>
                       <td style='font-size: 10px;'>${elem.newMargen}%</td>
@@ -1339,8 +1339,8 @@ const sendRechazo = async (req, res, next) => {
                       <td colspan="2" style='font-size: 10px;'>${elem.description}</td>
                       <td style="width: 50px; font-size: 10px;">${elem.RequestProduct.amount}</td>
                       <td style="width: 25px; font-size: 10px;">${elem.um}</td>
-                      <td style='font-size: 10px;'>$${(elem.RequestProduct.cost).toLocaleString('es-ES')}</td>
-                      <td style='font-size: 10px;'>$${(elem.RequestProduct.price).toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.cost.toLocaleString('es-ES')}</td>
+                      <td style='font-size: 10px;'>$${elem.RequestProduct.price.toLocaleString('es-ES')}</td>
                       <td style='font-size: 10px;'>${elem.RequestProduct.currentMargen}%</td>
                       <td style='font-size: 10px;'>$${elem.RequestProduct.priceAuth}</td>
                       <td style='font-size: 10px;'>${elem.RequestProduct.newMargen}%</td>
