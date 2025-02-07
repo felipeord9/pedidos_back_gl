@@ -50,6 +50,7 @@ const sendMail = async (req, res, next) => {
           "
         >
           <h1 style="text-align: center; font-size: 13px; font-weight: bold">PEDIDO DE VENTA</h1>
+          <p style="text-align: center; margin: 0.3rem 0;">Nota: Este documento no corresponde a una factura</p>
           <div style="position: relative; font-size: 8px; width: 100%; height: 100%;">
             <div style="margin: auto;">
               <h2 style="font-size: 8px; font-weight: bolder; margin: 0">
