@@ -14,7 +14,19 @@ const findOne = (id) => {
   return product
 }
 
+const create = async (body) => {
+  const newProduct = models.Product.create(body)
+  return newProduct
+}
+
+const update = async (changes) => {
+  const updatedProduct = models.Product.update(changes)
+  return updatedProduct
+}
+
 module.exports = {
   find,
-  findOne
+  findOne,
+  create,
+  update
 }
