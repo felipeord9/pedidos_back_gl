@@ -88,7 +88,9 @@ const createOrder = async (req, res, next) => {
       coId: body.agency.id,
       coDescription: body.agency.descripcion,
       createdAt: body.createdAt,
-      total: parseInt(body.products.total.split('.').join(''))
+      total: parseInt(body.products.total.split('.').join('')),
+      clientPosId: body.clientPos ? body.clientPos.id : null,
+      clientPosDescription: body.clientPos ? body.clientPos.razonSocial : null,
     })
     
     for(let product of body.products.agregados) {

@@ -8,6 +8,7 @@ const { Order, OrderSchema } = require('./orderModel')
 const { OrderProduct, OrderProductSchema } = require('./order-productModel')
 const { Request, RequestSchema } = require('./requestModel')
 const { RequestProduct, RequestProductSchema } = require('./request-productsModel')
+const { ClientPos, ClientPosSchema } = require('./clients-posModel')
 
 function setupModels(sequelize) {
   User.init(UserSchema, User.config(sequelize))
@@ -20,6 +21,7 @@ function setupModels(sequelize) {
   OrderProduct.init(OrderProductSchema, OrderProduct.config(sequelize))
   Request.init(RequestSchema, Request.config(sequelize))
   RequestProduct.init(RequestProductSchema, RequestProduct.config(sequelize))
+  ClientPos.init(ClientPosSchema, ClientPos.config(sequelize))
 
 
   User.associate(sequelize.models)
@@ -32,6 +34,7 @@ function setupModels(sequelize) {
   OrderProduct.associate(sequelize.models)
   Request.associate(sequelize.models)
   RequestProduct.associate(sequelize.models)
+  ClientPos.associate(sequelize.models)
 
 }
 

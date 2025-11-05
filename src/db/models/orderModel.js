@@ -124,6 +124,18 @@ const OrderSchema = {
     onUpdate: "CASCADE",
     onDelete: "SET NULL",
   },
+  clientPosId:{
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: "client_pos_id",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+  },
+  clientPosDescription: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'client_pos_description'
+  },
 };
 
 class Order extends Model {

@@ -9,6 +9,8 @@ const SellerRoutes = require('./sellerRoutes')
 const OrderRoutes = require('./orderRoutes')
 const AuthRoutes = require('./authRoutes')
 const RequestRoutes = require('./requestRoutes')
+const clientsPosRoutes = require('./clientsPosRoutes')
+const evidenceRoutes = require('./evidenceRoutes')
 
 function routerApi(app) {
     const router = express.Router()
@@ -25,6 +27,8 @@ function routerApi(app) {
     router.use('/sellers', SellerRoutes)
     router.use('/orders', OrderRoutes)
     router.use('/requests', RequestRoutes)
+    router.use('/client/pos', clientsPosRoutes)
+    router.use('/upload', evidenceRoutes)
 
 }
 
