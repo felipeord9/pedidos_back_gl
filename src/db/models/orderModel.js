@@ -136,6 +136,11 @@ const OrderSchema = {
     allowNull: true,
     field: 'client_pos_description'
   },
+  clientPosDirection: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'client_pos_direction'
+  },
 };
 
 class Order extends Model {
