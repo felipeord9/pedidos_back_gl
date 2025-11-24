@@ -82,6 +82,12 @@ const create = async (data) => {
 
 }
 
+const addItem = (body) => {
+  const newItem = models.ClientPos.create(body)
+
+  return newItem
+}
+
 const update = async (id, changes) => {
   const client = await findOne(id)
 
@@ -97,5 +103,6 @@ module.exports = {
   findBySeller,
   findByName,
   create, 
+  addItem,
   update
 }

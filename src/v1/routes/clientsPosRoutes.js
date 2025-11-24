@@ -16,6 +16,7 @@ router
   .get('/seller/:id', clientsPosController.findAllClientsBySeller)
   .get('/client/:coid/:name', clientsPosController.findOneClientByName)
   .post('/', checkRoles('admin', "vendedor", "agencia", "aprobador"), clientsPosController.createClient)
+  .post('/multiple/clients', checkRoles('admin'), clientsPosController.createMultiple)
   .patch('/:id', checkRoles('admin', "vendedor", "agencia", "aprobador"), clientsPosController.updateClient)
 
 module.exports = router

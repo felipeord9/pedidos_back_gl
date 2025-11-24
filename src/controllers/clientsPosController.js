@@ -96,6 +96,36 @@ const createClient = async (req, res, next) => {
   }
 }
 
+const createMultiple = async (req, res, next) => {
+  try {
+    const { body } = req
+
+    /* console.log(JSON.stringify(body)) */
+    
+    for(let client of body.clients.agregados) {
+      await clientsPosService.addItem({
+        coId: client.coId,
+        coDescription: client.coDescription,
+        razonSocial: client.razonSocial,
+        telefono: client.telefono,
+        direccion: client.direccion,
+        fotoLocal: false,
+        plazo: client.plazo,
+        createdAt: client.createdAt,
+        createdBy: client.createdBy,
+        idCreator: client.idCreator,
+      })
+    }
+
+    res.status(201).json({
+      message: 'Created',
+    })
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 const updateClient = async (req, res, next) => {
   try {
     const { body, params: { id } } = req
@@ -117,5 +147,6 @@ module.exports = {
   findAllClientsBySeller,
   findOneClientByName,
   createClient,
+  createMultiple,
   updateClient
 }
