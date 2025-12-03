@@ -14,6 +14,19 @@ const find = () => {
   return orders
 };
 
+const findInitial = () => {
+  const initialOrders = models.Order.findAll({
+    include: [
+      "items",
+      "user"
+    ],
+    order: [["id", "DESC"]],
+    limit: 100, // <-- Solo los primeros 100
+  });
+
+  return initialOrders;
+};
+
 const findBySeller = (sellerId) => {
   const orders = models.Order.findAll({
     where: {
@@ -30,6 +43,22 @@ const findBySeller = (sellerId) => {
   return orders
 };
 
+const findInitialBySeller = (sellerId) => {
+  const orders = models.Order.findAll({
+    where: {
+      sellerId
+    },
+    include: [
+      "items",
+      "user"
+    ],
+    order: [["id", "DESC"]],
+    limit: 100,
+  });
+
+  return orders
+};
+
 const findByCO = (coId) => {
   const orders = models.Order.findAll({
     where: {
@@ -41,6 +70,22 @@ const findByCO = (coId) => {
     ],
     order: [["id", "DESC"]],
     limit: 5000,
+  });
+
+  return orders
+};
+
+const findInitialByCO = (coId) => {
+  const orders = models.Order.findAll({
+    where: {
+      coId
+    },
+    include: [
+      "items",
+      "user"
+    ],
+    order: [["id", "DESC"]],
+    limit: 100,
   });
 
   return orders
@@ -108,8 +153,11 @@ const remove = async (id) => {
 
 module.exports = {
   find,
+  findInitial,
   findBySeller,
+  findInitialBySeller,
   findByCO,
+  findInitialByCO,
   finOne,
   findFilteredByDate,
   create,

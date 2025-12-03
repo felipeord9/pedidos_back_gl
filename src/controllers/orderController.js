@@ -14,6 +14,20 @@ const findAllOrders = async (req, res, next) => {
   }
 }
 
+const findInitialOrders = async (req, res, next) => {
+  try {
+    const data = await OrderService.findInitial()
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 const findAllOrdersBySeller = async (req, res, next) => {
   try {
     const { sellerId } = req.params
@@ -28,10 +42,38 @@ const findAllOrdersBySeller = async (req, res, next) => {
   }
 }
 
+const findInitialOrdersBySeller = async (req, res, next) => {
+  try {
+    const { sellerId } = req.params
+    const data = await OrderService.findInitialBySeller(sellerId)
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const findAllOrdersByCO = async (req, res, next) => {
   try {
     const { coId } = req.params
     const data = await OrderService.findByCO(coId)
+
+    res.status(200).json({
+      message: 'OK',
+      data 
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const findInitialOrdersByCO = async (req, res, next) => {
+  try {
+    const { coId } = req.params
+    const data = await OrderService.findInitialByCO(coId)
 
     res.status(200).json({
       message: 'OK',
@@ -157,8 +199,11 @@ const deleteOrder = async (req, res, next) => {
 
 module.exports = {
   findAllOrders,
+  findInitialOrders,
   findAllOrdersBySeller,
+  findInitialOrdersBySeller,
   findAllOrdersByCO,
+  findInitialOrdersByCO,
   findOneOrder,
   findFilteredOrdersByDate,
   createOrder,
