@@ -42,7 +42,11 @@ const UserSchema = {
     allowNull: false,
     field: 'created_at',
     defaultValue: Sequelize.NOW
-  }
+  },
+  co: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
 };
 
 class User extends Model {
