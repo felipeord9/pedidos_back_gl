@@ -33,7 +33,7 @@ const UserSchema = {
     field: 'recovery_token'
   },
   role: {
-    type: DataTypes.ENUM(["vendedor", "agencia", "admin" , "aprobador","precios"]),
+    type: DataTypes.ENUM(["vendedor", "agencia", "admin" , "aprobador", "precios", "comercial"]),
     allowNull: false,
     defaultValue: 'vendedor'
   },
